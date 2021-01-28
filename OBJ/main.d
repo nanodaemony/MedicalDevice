@@ -6,8 +6,9 @@
 ..\obj\main.o: H:\Keil5\ARM\ARMCC\Bin\..\include\stdint.h
 ..\obj\main.o: ..\USER\system_stm32f10x.h
 ..\obj\main.o: ..\USER\stm32f10x_conf.h
-..\obj\main.o: ..\FWLIB\STM32F10x_FWLib\inc\stm32f10x_dma.h
+..\obj\main.o: ..\FWLIB\STM32F10x_FWLib\inc\stm32f10x_adc.h
 ..\obj\main.o: ..\USER\stm32f10x.h
+..\obj\main.o: ..\FWLIB\STM32F10x_FWLib\inc\stm32f10x_dma.h
 ..\obj\main.o: ..\FWLIB\STM32F10x_FWLib\inc\stm32f10x_fsmc.h
 ..\obj\main.o: ..\FWLIB\STM32F10x_FWLib\inc\stm32f10x_gpio.h
 ..\obj\main.o: ..\FWLIB\STM32F10x_FWLib\inc\stm32f10x_rcc.h
@@ -45,3 +46,4 @@
 ..\obj\main.o: ..\HARDWARE\USART3\usart3.h
 ..\obj\main.o: ..\ATK-ESP8266\common.h
 ..\obj\main.o: ..\HARDWARE\KEY\key.h
+..\obj\main.o: ..\HARDWARE\AD8232\adc.h

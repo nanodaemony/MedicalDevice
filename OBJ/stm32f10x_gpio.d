@@ -5,8 +5,9 @@
 ..\obj\stm32f10x_gpio.o: H:\Keil5\ARM\ARMCC\Bin\..\include\stdint.h
 ..\obj\stm32f10x_gpio.o: ..\USER\system_stm32f10x.h
 ..\obj\stm32f10x_gpio.o: ..\USER\stm32f10x_conf.h
-..\obj\stm32f10x_gpio.o: ..\FWLIB\STM32F10x_FWLib\inc\stm32f10x_dma.h
+..\obj\stm32f10x_gpio.o: ..\FWLIB\STM32F10x_FWLib\inc\stm32f10x_adc.h
 ..\obj\stm32f10x_gpio.o: ..\USER\stm32f10x.h
+..\obj\stm32f10x_gpio.o: ..\FWLIB\STM32F10x_FWLib\inc\stm32f10x_dma.h
 ..\obj\stm32f10x_gpio.o: ..\FWLIB\STM32F10x_FWLib\inc\stm32f10x_fsmc.h
 ..\obj\stm32f10x_gpio.o: ..\FWLIB\STM32F10x_FWLib\inc\stm32f10x_gpio.h
 ..\obj\stm32f10x_gpio.o: ..\FWLIB\STM32F10x_FWLib\inc\stm32f10x_rcc.h

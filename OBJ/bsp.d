@@ -13,12 +13,13 @@
 ..\obj\bsp.o: ..\UCOSIII\uC-LIB\lib_str.h
 ..\obj\bsp.o: ..\UCOSIII\uC-LIB\lib_ascii.h
 ..\obj\bsp.o: ..\USER\stm32f10x_conf.h
-..\obj\bsp.o: ..\FWLIB\STM32F10x_FWLib\inc\stm32f10x_dma.h
+..\obj\bsp.o: ..\FWLIB\STM32F10x_FWLib\inc\stm32f10x_adc.h
 ..\obj\bsp.o: ..\USER\stm32f10x.h
 ..\obj\bsp.o: ..\CORE\core_cm3.h
 ..\obj\bsp.o: H:\Keil5\ARM\ARMCC\Bin\..\include\stdint.h
 ..\obj\bsp.o: ..\USER\system_stm32f10x.h
 ..\obj\bsp.o: ..\USER\stm32f10x_conf.h
+..\obj\bsp.o: ..\FWLIB\STM32F10x_FWLib\inc\stm32f10x_dma.h
 ..\obj\bsp.o: ..\FWLIB\STM32F10x_FWLib\inc\stm32f10x_fsmc.h
 ..\obj\bsp.o: ..\FWLIB\STM32F10x_FWLib\inc\stm32f10x_gpio.h
 ..\obj\bsp.o: ..\FWLIB\STM32F10x_FWLib\inc\stm32f10x_rcc.h

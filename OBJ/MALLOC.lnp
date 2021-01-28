@@ -67,6 +67,7 @@
 "..\obj\common.o"
 "..\obj\wifista.o"
 "..\obj\malloc.o"
+"..\obj\adc.o"
 --strict --scatter "..\OBJ\MALLOC.sct"
 --summary_stderr --info summarysizes --map --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

@@ -114,13 +114,13 @@ void USART2_Init(u32 bound) {
  * 串口2,printf 函数
  * 确保一次发送数据不超过USART2_MAX_SEND_LEN字节
  */
-void u2_printf(char* fmt,...) {  
+void u2_printf(char* fmt, ...) {  
 	va_list ap;
-	va_start(ap,fmt);
-	vsprintf((char*)USART2_TX_BUF,fmt,ap);
+	va_start(ap, fmt);
+	vsprintf((char*)USART2_TX_BUF, fmt, ap);
 	va_end(ap);
 	// 等待通道7传输完成  
-	while(DMA_GetCurrDataCounter(DMA1_Channel7)!=0);	 
+	while(DMA_GetCurrDataCounter(DMA1_Channel7) != 0);	 
 	// 通过dma发送出去
 	UART_DMA_Enable(DMA1_Channel7,strlen((const char*)USART2_TX_BUF)); 	
 }

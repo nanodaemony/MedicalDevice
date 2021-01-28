@@ -6,8 +6,9 @@
 ..\obj\usart3.o: H:\Keil5\ARM\ARMCC\Bin\..\include\stdint.h
 ..\obj\usart3.o: ..\USER\system_stm32f10x.h
 ..\obj\usart3.o: ..\USER\stm32f10x_conf.h
-..\obj\usart3.o: ..\FWLIB\STM32F10x_FWLib\inc\stm32f10x_dma.h
+..\obj\usart3.o: ..\FWLIB\STM32F10x_FWLib\inc\stm32f10x_adc.h
 ..\obj\usart3.o: ..\USER\stm32f10x.h
+..\obj\usart3.o: ..\FWLIB\STM32F10x_FWLib\inc\stm32f10x_dma.h
 ..\obj\usart3.o: ..\FWLIB\STM32F10x_FWLib\inc\stm32f10x_fsmc.h
 ..\obj\usart3.o: ..\FWLIB\STM32F10x_FWLib\inc\stm32f10x_gpio.h
 ..\obj\usart3.o: ..\FWLIB\STM32F10x_FWLib\inc\stm32f10x_rcc.h

@@ -6,6 +6,10 @@
 #include "usart2.h"
 #include "usart3.h"
 #include "common.h"
+#include "adc.h"
+
+#include<stdio.h>
+#include<stdlib.h>
 
 // UCOSIII中以下优先级用户程序不能使用，ALIENTEK
 // 将这些优先级分配给了UCOSIII的5个系统内部任务
@@ -84,15 +88,15 @@ void wifi_get_task(void *p_arg);
 
 
 // 任务优先级
-#define DEVICE_GET_TASK_PRIO		8
+#define HEART_GET_TASK_PRIO		7
 // 任务堆栈大小	
-#define DEVICE_GET_STK_SIZE 		128
+#define HEART_GET_STK_SIZE 		128
 // 任务控制块
-OS_TCB DeviceGetTaskTCB;
+OS_TCB HeartGetTaskTCB;
 // 任务堆栈	
-CPU_STK DEVICE_GET_TASK_STK[DEVICE_GET_STK_SIZE];
+CPU_STK HEART_GET_TASK_STK[HEART_GET_STK_SIZE];
 // 任务函数
-void device_get_task(void *p_arg);
+void heart_get_task(void *p_arg);
 
 
 // TCP接收数据长度
@@ -100,6 +104,14 @@ u16 rlen = 0;
 int i;
 // 仪器数据接收数据长度
 u16 dlen = 0;
+
+// 心电参数
+u16 adc1;
+int voltage1;
+
+// 存储心电数据的Buff
+u8 heartBuff[1024]; 
+int h;
 
 int main(void) {
 	OS_ERR err;
@@ -111,8 +123,9 @@ int main(void) {
 	// 初始化串口2波特率为115200(☆)
 	USART2_Init(115200);
 	// Init the USART3
-	USART3_Init(115200);  	
+	// USART3_Init(115200);  	
 	LED_Init();         // LED初始化
+	Adc_Init();
 	
 	OSInit(&err);		// 初始化UCOSIII
 	OS_CRITICAL_ENTER();// 进入临界区
@@ -128,7 +141,7 @@ int main(void) {
                  (OS_MSG_QTY  )0,					// 任务内部消息队列能够接收的最大消息数目,为0时禁止接收消息
                  (OS_TICK	  )0,					// 当使能时间片轮转时的时间片长度，为0时为默认长度，
                  (void   	* )0,					// 用户补充的存储区
-                 (OS_OPT      )OS_OPT_TASK_STK_CHK|OS_OPT_TASK_STK_CLR, //任务选项
+                 (OS_OPT      )OS_OPT_TASK_STK_CHK|OS_OPT_TASK_STK_CLR, // 任务选项
                  (OS_ERR 	* )&err);				// 存放该函数错误时的返回值
 	OS_CRITICAL_EXIT();	// 退出临界区	 
 	OSStart(&err);  // 开启UCOSIII
@@ -231,20 +244,20 @@ void start_task(void *p_arg) {
                  (OS_OPT      )OS_OPT_TASK_STK_CHK|OS_OPT_TASK_STK_CLR, 
                  (OS_ERR 	* )&err);	
 				 
-	// 创建DEVICE_GET任务
-	OSTaskCreate((OS_TCB 	* )&DeviceGetTaskTCB,		
-				 (CPU_CHAR	* )"Device Get task", 		
-                 (OS_TASK_PTR )device_get_task, 			
+	// 创建HEART_GET任务
+	OSTaskCreate((OS_TCB 	* )&HeartGetTaskTCB,		
+				 (CPU_CHAR	* )"Heart Get task", 		
+                 (OS_TASK_PTR )heart_get_task, 			
                  (void		* )0,					
-                 (OS_PRIO	  )DEVICE_GET_TASK_PRIO,     	
-                 (CPU_STK   * )&DEVICE_GET_TASK_STK[0],	
-                 (CPU_STK_SIZE)DEVICE_GET_STK_SIZE/10,	
-                 (CPU_STK_SIZE)DEVICE_GET_STK_SIZE,		
+                 (OS_PRIO	  )HEART_GET_TASK_PRIO,     	
+                 (CPU_STK   * )&HEART_GET_TASK_STK[0],	
+                 (CPU_STK_SIZE)HEART_GET_STK_SIZE/10,	
+                 (CPU_STK_SIZE)HEART_GET_STK_SIZE,		
                  (OS_MSG_QTY  )0,					
                  (OS_TICK	  )0,					
                  (void   	* )0,				
                  (OS_OPT      )OS_OPT_TASK_STK_CHK|OS_OPT_TASK_STK_CLR, 
-                 (OS_ERR 	* )&err);
+                 (OS_ERR 	* )&err);	
 				 
 	OS_TaskSuspend((OS_TCB*)&StartTaskTCB, &err);		// 挂起开始任务			 
 	OS_CRITICAL_EXIT();	// 进入临界区
@@ -325,7 +338,7 @@ void wifi_task(void *p_arg) {
 		delay_ms(1000);
 		// atk_8266_quit_trans();
 		// atk_8266_send_cmd("AT+CIPSEND", "OK", 20); 
-		atk_8266_send_data("This is from ESP82661298012", "OK", 10);
+		// atk_8266_send_data("This is from ESP82661298012", "OK", 10);
 	}
 }
 
@@ -346,12 +359,32 @@ void wifi_get_task(void *p_arg) {
 			// 添加结束符 
 			USART2_RX_BUF[rlen] = 0;		
 			// 发送到串口  
-			printf("%s\r\n", USART2_RX_BUF);	 
+			printf("%s\r\n", USART2_RX_BUF);				
 			// 串口状态置位
 			USART2_RX_STA = 0;
+			
 		}
 	}
 }
+
+
+// Heart心电任务函数
+void heart_get_task(void *p_arg) {
+	OS_ERR err;
+	p_arg = p_arg;
+	// 防止影响开始的初始化工作
+	for(i = 0; i < 40; i++) {
+		delay_ms(1000);
+	}
+	while(1) {
+		// delay_ms(10);
+		adc1 = Get_Adc_Average(10, 10);
+		voltage1 = adc1 / 4;
+		printf("%d\r\n", voltage1);
+		u2_printf("#%d", voltage1);
+	}
+}
+
 
 // 仪器数据获取任务函数
 void device_get_task(void *p_arg) {
