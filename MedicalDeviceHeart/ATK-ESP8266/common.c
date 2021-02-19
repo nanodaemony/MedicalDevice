@@ -9,11 +9,19 @@ const u8* portnum="10086";
 
 // WIFI STA模式,设置要去连接的路由器无线参数,根据自己的路由器设置.
 // 路由器SSID号(SSID就是WIFI名称)
-const u8* wifista_ssid="DataCollector";		
+const u8* wifista_ssid="MERCURY_DA4C";		
 // wpa/wpa2 aes加密方式
 const u8* wifista_encryption="wpawpa2_aes";	
 // 连接密码
-const u8* wifista_password="1357924680"; 	  
+const u8* wifista_password="cz1174520425"; 	  
+
+//// WIFI STA模式,设置要去连接的路由器无线参数,根据自己的路由器设置.
+//// 路由器SSID号(SSID就是WIFI名称)
+//const u8* wifista_ssid="DataCollector";		
+//// wpa/wpa2 aes加密方式
+//const u8* wifista_encryption="wpawpa2_aes";	
+//// 连接密码
+//const u8* wifista_password="1357924680"; 
 
 // WIFI AP模式,模块对外的无线参数,可自行修改.
 // 这个WIFI模块产生WIFI的名称

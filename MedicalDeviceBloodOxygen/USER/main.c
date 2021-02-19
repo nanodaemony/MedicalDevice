@@ -102,6 +102,8 @@ u8 temp[6];
 u8 str[100];
 u8 dis_hr = 0, dis_spo2 = 0;
 
+// 用于控制是否打开数据传输开关的变量,初始化为允许发送数据
+int isSendData = 1;
 
 int main(void) {
 	OS_ERR err;
@@ -213,7 +215,7 @@ void start_task(void *p_arg) {
 	OS_CRITICAL_EXIT();	// 进入临界区
 }
 
-//led0任务函数
+// led0任务函数
 void led0_task(void *p_arg) {
 	OS_ERR err;
 	p_arg = p_arg;
@@ -241,12 +243,12 @@ void command_task(void *p_arg) {
 			// 发送到串口  
 			printf("%s\r\n", USART2_RX_BUF);	
 			
-			// 说明接收到了数据,这里做控制
-
+			// 说明接收到了数据,这里做控制,控制开始或停止采集血氧数据
+            // 这里没有对接收的命令做任何处理，认为只要接收到数据就做一次状态变换
+            isSendData = !isSendData;
 			
 			// 串口状态置位
 			USART2_RX_STA = 0;
-			
 		}
 	}
 }
@@ -336,11 +338,14 @@ void blood_get_task(void *p_arg) {
 				dis_spo2 = 0;
 			}
 		}
-		u2_printf("@%i!%i!%i!%i", n_heart_rate, ch_hr_valid, n_sp02, ch_spo2_valid);
-		printf("HR=%i, ", n_heart_rate); 
-		printf("HRvalid=%i, ", ch_hr_valid);
-		printf("SpO2=%i, ", n_sp02);
-		printf("SPO2Valid=%i\r\n", ch_spo2_valid);
+        // 如果开启了数据传输则传输数据出去
+        if(isSendData) {
+            u2_printf("@%i!%i!%i!%i", n_heart_rate, ch_hr_valid, n_sp02, ch_spo2_valid);
+            printf("HR=%i, ", n_heart_rate); 
+            printf("HRvalid=%i, ", ch_hr_valid);
+            printf("SpO2=%i, ", n_sp02);
+            printf("SPO2Valid=%i\r\n", ch_spo2_valid);
+        }
         maxim_heart_rate_and_oxygen_saturation(aun_ir_buffer, n_ir_buffer_length, aun_red_buffer, &n_sp02, &ch_spo2_valid, &n_heart_rate, &ch_hr_valid);
 	}
 }

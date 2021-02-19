@@ -4,7 +4,7 @@
 ..\obj\max30102.o: ..\SYSTEM\sys\sys.h
 ..\obj\max30102.o: ..\USER\stm32f10x.h
 ..\obj\max30102.o: ..\CORE\core_cm3.h
-..\obj\max30102.o: H:\Keil5\ARM\ARMCC\Bin\..\include\stdint.h
+..\obj\max30102.o: D:\Keil5\ARM\ARMCC\Bin\..\include\stdint.h
 ..\obj\max30102.o: ..\USER\system_stm32f10x.h
 ..\obj\max30102.o: ..\USER\stm32f10x_conf.h
 ..\obj\max30102.o: ..\FWLIB\STM32F10x_FWLib\inc\stm32f10x_adc.h

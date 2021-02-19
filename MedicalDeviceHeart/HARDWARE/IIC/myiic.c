@@ -129,8 +129,7 @@ void IIC_WriteBytes(u8 WriteAddr,u8* data,u8 dataLength) {
 	IIC_Send_Byte(WriteAddr);	    //·¢ËÍÐ´ÃüÁî
 	IIC_Wait_Ack();
 	
-	for(i=0;i<dataLength;i++)
-	{
+	for(i=0; i<dataLength; i++) {
 		IIC_Send_Byte(data[i]);
 		IIC_Wait_Ack();
 	}				    	   

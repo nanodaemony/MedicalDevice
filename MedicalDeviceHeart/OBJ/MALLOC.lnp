@@ -9,6 +9,7 @@
 "..\obj\myiic.o"
 "..\obj\algorithm.o"
 "..\obj\max30102.o"
+"..\obj\oled.o"
 "..\obj\delay.o"
 "..\obj\sys.o"
 "..\obj\usart.o"

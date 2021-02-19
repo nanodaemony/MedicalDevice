@@ -335,7 +335,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_HD,USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\USER;..\CORE;..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\STM32F10x_FWLib\inc;..\FWLIB\STM32F10x_FWLib\inc;..\HARDWARE\LED;..\UCOSIII\uC-CPU;..\UCOSIII\uC-LIB;..\UCOSIII\uCOS-III;..\UCOSIII\UCOS_BSP;..\UCOSIII\uCOS_CONFIG;..\UCOSIII\uCOS-III\Source;..\UCOSIII\uC-CPU\ARM-Cortex-M3\RealView;..\UCOSIII\uC-LIB\Ports\ARM-Cortex-M3\RealView;..\UCOSIII\uCOS-III\Ports\ARM-Cortex-M3\Generic\RealView;..\HARDWARE\USART2;..\FWLIB\STM32F10x_FWLib\inc;..\ATK-ESP8266;..\HARDWARE\KEY;..\MALLOC;..\HARDWARE\USART3;..\HARDWARE\AD8232;..\HARDWARE\IIC;..\HARDWARE\MAX30102</IncludePath>
+              <IncludePath>..\USER;..\CORE;..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\STM32F10x_FWLib\inc;..\FWLIB\STM32F10x_FWLib\inc;..\HARDWARE\LED;..\UCOSIII\uC-CPU;..\UCOSIII\uC-LIB;..\UCOSIII\uCOS-III;..\UCOSIII\UCOS_BSP;..\UCOSIII\uCOS_CONFIG;..\UCOSIII\uCOS-III\Source;..\UCOSIII\uC-CPU\ARM-Cortex-M3\RealView;..\UCOSIII\uC-LIB\Ports\ARM-Cortex-M3\RealView;..\UCOSIII\uCOS-III\Ports\ARM-Cortex-M3\Generic\RealView;..\HARDWARE\USART2;..\FWLIB\STM32F10x_FWLib\inc;..\ATK-ESP8266;..\HARDWARE\KEY;..\MALLOC;..\HARDWARE\USART3;..\HARDWARE\AD8232;..\HARDWARE\IIC;..\HARDWARE\MAX30102;..\HARDWARE\OLED</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -433,6 +433,11 @@
               <FileName>max30102.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\HARDWARE\IIC\max30102.c</FilePath>
+            </File>
+            <File>
+              <FileName>oled.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HARDWARE\OLED\oled.c</FilePath>
             </File>
           </Files>
         </Group>

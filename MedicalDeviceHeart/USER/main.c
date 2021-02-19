@@ -10,6 +10,7 @@
 #include "max30102.h" 
 #include "myiic.h"
 #include "algorithm.h"
+#include "oled.h"
 
 #include<stdio.h>
 #include<stdlib.h>
@@ -150,6 +151,14 @@ int main(void) {
 	
 	delay_init();       // 延时初始化
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2); // 中断分组配置
+    
+    //初始化OLED 
+    OLED_Init();
+    OLED_ShowString(0, 0, "NanoDevice", 24);  
+    // OLED_ShowString(0, 30, "Initializing...", 16);    
+    OLED_ShowString(0, 52, "   By CZ(msc 206)", 12);      
+    // 更新显示到OLED
+    OLED_Refresh_Gram();
 	uart_init(115200);  // 串口波特率设置
 	// 初始化串口2波特率为115200(☆)
 	USART2_Init(115200);
@@ -160,10 +169,12 @@ int main(void) {
 	
 	// 初始化血氧模块
 	max30102_init();
-	
+
 	// 显示测试界面主UI布局
 	delay_ms(1000);
 	printf("Start wifi test.\r\n");
+    OLED_ShowString(0, 30, "Initializing...", 12);  
+    OLED_Refresh_Gram();
 	// 检查WIFI模块是否在线
 	while(atk_8266_send_cmd("AT", "OK", 20)) {
 		// 退出透传(然后进入AT指令模式)
@@ -171,9 +182,13 @@ int main(void) {
 		// 关闭透传模式	
 		atk_8266_send_cmd("AT+CIPMODE=0", "OK", 200);  
 		printf("未检测到模块!!!");
+        OLED_ShowString(0, 30, "No WiFi Module.", 12);
+        OLED_Refresh_Gram();
 		delay_ms(800);
 		printf("尝试连接模块..."); 
 	} 
+    OLED_ShowString(0, 30, "ESP8266 Connected!", 12);
+    OLED_Refresh_Gram();
 	printf("Wifi module is connected.\r\n");
 	// 关闭回显
 	while(atk_8266_send_cmd("ATE0", "OK", 20));
@@ -187,25 +202,44 @@ int main(void) {
 	// Wait to reboot.
 	delay_ms(1000);         
 	delay_ms(1000);
-	delay_ms(1000);
+    OLED_ShowString(0, 30, "Connecting WiFi...", 12);
+    OLED_Refresh_Gram();
 	printf("Start to connect to Hotspot.\r\n");
-	atk_8266_send_cmd("AT+CWJAP=\"DataCollector\",\"1357924680\"", "OK", 100);	
+    while(atk_8266_send_cmd("AT+CWJAP=\"DataCollector\",\"1357924680\"", "OK", 100)) {
+        delay_ms(1000);
+        printf("Trying to connect to Wifi...");
+        OLED_ShowString(0, 30, "Connecting WiFi...", 12);
+        OLED_Refresh_Gram();
+    }
 	printf("Finish to connect to Hotspot.\r\n");
+    OLED_ShowString(0, 30, "WiFi connected!!!     ", 12);   
+    OLED_Refresh_Gram();
 	delay_ms(1000);
 	delay_ms(1000);
 	delay_ms(1000);
 	atk_8266_send_cmd("AT+CIPMUX=0", "OK", 20);   
 	delay_ms(5000);
 	printf("Start connect to server.\r\n");
-	atk_8266_send_cmd("AT+CIPSTART=\"TCP\",\"192.168.8.100\",10086", "OK", 200);
+    OLED_ShowString(0, 30, "Connecting server...", 12);   
+    OLED_Refresh_Gram();
+    
+    while(atk_8266_send_cmd("AT+CIPSTART=\"TCP\",\"39.98.122.209\",10087", "OK", 200)) {
+        delay_ms(1000);
+        printf("Trying to connect to Server...");
+        OLED_ShowString(0, 30, "Connecting server...", 12);
+        OLED_Refresh_Gram();
+    }
+	// atk_8266_send_cmd("AT+CIPSTART=\"TCP\",\"39.98.122.209\",10087", "OK", 200);
 	printf("Finish connect to server.\r\n");
+    OLED_ShowString(0, 30, "Server Connected!!!        ", 12);   
+    OLED_Refresh_Gram();
 	delay_ms(5000);
 	atk_8266_send_cmd("AT+CIPMODE=1", "OK", 200); 
 	delay_ms(1000);	
 	// 开始传输数据
 	atk_8266_send_cmd("AT+CIPSEND", "OK", 20); 
 	printf("Start init UCOS...");
-	
+    
 	OSInit(&err);		// 初始化UCOSIII
 	OS_CRITICAL_ENTER();// 进入临界区
 	// 创建开始任务
@@ -323,7 +357,8 @@ void start_task(void *p_arg) {
                  (OS_OPT      )OS_OPT_TASK_STK_CHK|OS_OPT_TASK_STK_CLR, 
                  (OS_ERR 	* )&err);	
 				 
- 
+    // 清屏
+    OLED_Clear();
 				 
 	OS_TaskSuspend((OS_TCB*)&StartTaskTCB, &err);		// 挂起开始任务			 
 	OS_CRITICAL_EXIT();	// 进入临界区
@@ -347,8 +382,7 @@ void led1_task(void *p_arg) {
 	p_arg = p_arg;
 	while(1) {
 		LED1 = ~LED1; 
-		OSTimeDlyHMSM(0,0,0,500,OS_OPT_TIME_HMSM_STRICT,&err); // 延时500ms
-		
+		OSTimeDlyHMSM(0, 0, 0, 500, OS_OPT_TIME_HMSM_STRICT, &err); // 延时500ms
 	}
 }
 
@@ -361,7 +395,6 @@ void wifi_get_task(void *p_arg) {
 	for(i = 0; i < 30; i++) {
 		delay_ms(1000);
 	}
-	
 	while(1) {
 		delay_ms(100);
 		if(USART2_RX_STA & 0X8000) { 
@@ -406,7 +439,6 @@ void heart_get_task(void *p_arg) {
 	}
 }
 
-
 // 仪器数据获取任务函数
 void blood_get_task(void *p_arg) {
 	OS_ERR err;
@@ -428,10 +460,5 @@ void blood_get_task(void *p_arg) {
 		}
 	}
 }
-
-
-
-
-
 
 
