@@ -105,6 +105,8 @@ u8 dis_hr = 0, dis_spo2 = 0;
 // 用于控制是否打开数据传输开关的变量,初始化为允许发送数据
 int isSendData = 1;
 
+
+
 int main(void) {
 	OS_ERR err;
 	CPU_SR_ALLOC();
@@ -260,7 +262,7 @@ void blood_get_task(void *p_arg) {
 	p_arg = p_arg;
 	printf("Wait Start.");
 	// 防止影响开始的初始化工作
-	for(i = 0; i < 30; i++) {
+	for(i = 0; i < 10; i++) {
 		delay_ms(1000);
 	}
 	un_min = 0x3FFFF;
@@ -340,7 +342,8 @@ void blood_get_task(void *p_arg) {
 		}
         // 如果开启了数据传输则传输数据出去
         if(isSendData) {
-            u2_printf("@%i!%i!%i!%i", n_heart_rate, ch_hr_valid, n_sp02, ch_spo2_valid);
+            // HR = %i Valid = %i,  SpO2 = %i Valid = %i  
+            u2_printf("@%i@%i@%i@%i@", n_heart_rate, ch_hr_valid, n_sp02, ch_spo2_valid);
             printf("HR=%i, ", n_heart_rate); 
             printf("HRvalid=%i, ", ch_hr_valid);
             printf("SpO2=%i, ", n_sp02);

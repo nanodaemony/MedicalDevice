@@ -15,7 +15,7 @@
 // [7]0 1 2 3 ... 127 		   
 u8 OLED_GRAM[128][8];	 
 
-// 更新显存到LCD		 
+// 更新显存到LCD 
 void OLED_Refresh_Gram(void) {
 	u8 i, n;		    
 	for(i = 0; i < 8; i++) {  
