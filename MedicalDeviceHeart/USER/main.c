@@ -140,8 +140,8 @@ int main(void) {
     
     // 初始化OLED 
     OLED_Init();
-    OLED_ShowString(0, 0, "NanoDevice", 24);     
-    OLED_ShowString(0, 52, "   By CZ(msc 206)", 8);      
+    OLED_ShowString(0, 0, "NanoDevice", 16);     
+    // OLED_ShowString(0, 52, "   By CZ(msc 206)", 8);      
     // 更新显示到OLED
     OLED_Refresh_Gram();
 	uart_init(115200);  // 串口波特率设置
@@ -158,7 +158,7 @@ int main(void) {
 	// 显示测试界面主UI布局
 	delay_ms(1000);
 	printf("Device init...\r\n");
-    OLED_ShowString(0, 30, "Initializing...", 12);  
+    OLED_ShowString(0, 20, "Initializing...", 12);  
     OLED_Refresh_Gram();
 	// 检查WIFI模块是否在线
 	while(atk_8266_send_cmd("AT", "OK", 20)) {
@@ -167,12 +167,12 @@ int main(void) {
 		// 关闭透传模式	
 		atk_8266_send_cmd("AT+CIPMODE=0", "OK", 200);  
 		printf("未检测到模块!!!");
-        OLED_ShowString(0, 30, "No WiFi Module.", 12);
+        OLED_ShowString(0, 20, "No WiFi Module.", 12);
         OLED_Refresh_Gram();
 		delay_ms(800);
 		printf("尝试连接模块..."); 
 	} 
-    OLED_ShowString(0, 30, "ESP8266 Connected!", 12);
+    OLED_ShowString(0, 20, "ESP8266 Connected!", 12);
     OLED_Refresh_Gram();
 	printf("Wifi module is connected.\r\n");
 	// 关闭回显
@@ -186,18 +186,18 @@ int main(void) {
 	delay_ms(1000);         
 	delay_ms(1000);
     // 连接WiFi热点
-    OLED_ShowString(0, 30, "Connecting WiFi...", 12);
+    OLED_ShowString(0, 20, "Connecting WiFi...", 12);
     OLED_Refresh_Gram();
 	printf("Start to connect to Hotspot.\r\n");
     // 持续连接直到成功
     while(atk_8266_send_cmd("AT+CWJAP=\"DataCollector\",\"1357924680\"", "OK", 100)) {
         delay_ms(1000);
         printf("Trying to connect to Wifi...\r\n");
-        OLED_ShowString(0, 30, "Retry Connect WiFi...", 12);
-        OLED_Refresh_Gram();
+        OLED_ShowString(0, 20, "Retry Connect WiFi...", 12);
+        // OLED_Refresh_Gram();
     }
 	printf("成功连接WiFi.\r\n");
-    OLED_ShowString(0, 30, "WiFi connected!!!     ", 12);   
+    OLED_ShowString(0, 20, "WiFi connected!!!     ", 12);   
     OLED_Refresh_Gram();
 	delay_ms(1000);
 	delay_ms(1000);
@@ -206,18 +206,18 @@ int main(void) {
 	delay_ms(5000);
     
 	printf("开始连接服务器.\r\n");
-    OLED_ShowString(0, 30, "Connecting server...", 12);   
+    OLED_ShowString(0, 20, "Connecting server...", 12);   
     OLED_Refresh_Gram();
     // 项目服务器地址: 39.98.122.209
     // 笔记本电脑地址 (连接手机): 192.168.43.204
     while(atk_8266_send_cmd("AT+CIPSTART=\"TCP\",\"192.168.43.204\",10087", "OK", 200)) {
         delay_ms(1000);
         printf("Trying to connect to Server...\r\n");
-        OLED_ShowString(0, 30, "Retry Connect server...", 12);
+        OLED_ShowString(0, 20, "Retry Connect server...", 12);
         OLED_Refresh_Gram();
     }
 	printf("服务器已连接.\r\n");
-    OLED_ShowString(0, 30, "Server Connected!!!        ", 12);   
+    OLED_ShowString(0, 20, "Server Connected!!!        ", 12);   
     OLED_Refresh_Gram();
 	delay_ms(3000);
 	atk_8266_send_cmd("AT+CIPMODE=1", "OK", 200); 
@@ -228,11 +228,13 @@ int main(void) {
     // 表面当前WIFI模块进入透传,此时可以接收指令数据了
     isCanReceiveCommand = 0;
     isFinishInit = 1;
-    OLED_ShowString(0, 30, "                     ", 12);
-    OLED_ShowString(0, 30, "HR: ", 12);   
-    OLED_ShowString(84, 30, "Valid: ", 12); 
-    OLED_ShowString(0, 45, "SpO2: ", 12);   
-    OLED_ShowString(84, 45, "Valid: ", 12); 
+    OLED_ShowString(0, 20, "                     ", 12);
+    OLED_ShowString(0, 20, "HR: ", 12);   
+    OLED_ShowString(84, 20, "Valid: ", 12); 
+    OLED_ShowString(0, 35, "SpO2: ", 12);   
+    OLED_ShowString(84, 35, "Valid: ", 12); 
+    OLED_ShowString(0, 35, "Valid: ", 12); 
+    OLED_ShowString(0, 50, "Connection: Yes", 12); 
     OLED_Refresh_Gram();
     delay_ms(500);
     
@@ -384,10 +386,10 @@ void oled_task(void *p_arg) {
                       (OS_ERR*      )&err);
 		delay_ms(100);
         
-        OLED_ShowString(30, 30, hr, 12);   
-        OLED_ShowString(120, 30, hrValid, 12); 
-        OLED_ShowString(42, 45, spo2, 12);   
-        OLED_ShowString(120, 45, spo2Valid, 12);
+        OLED_ShowString(30, 20, hr, 12);   
+        OLED_ShowString(120, 20, hrValid, 12); 
+        OLED_ShowString(42, 35, spo2, 12);   
+        OLED_ShowString(120, 35, spo2Valid, 12);
         
         // OLED_ShowString(0, 30, hr, 12);
         // test = test + 3;
@@ -432,10 +434,10 @@ void command_get_task(void *p_arg) {
                     isSendBloodData = 1;
                 } else if (USART2_RX_BUF[1] - '6' == 0) {
                     isSendBloodData = 0;
-                    OLED_ShowString(42, 45, "---", 12);   
-                    OLED_ShowString(120, 45, "-", 12);
-                    OLED_ShowString(30, 30, "---", 12);   
-                    OLED_ShowString(120, 30, "-", 12);
+                    OLED_ShowString(42, 35, "---", 12);   
+                    OLED_ShowString(120, 35, "-", 12);
+                    OLED_ShowString(30, 20, "---", 12);   
+                    OLED_ShowString(120, 20, "-", 12);
                     OLED_Refresh_Gram();
                     delay_ms(100);
                 }
@@ -527,8 +529,6 @@ void blood_get_task(void *p_arg) {
                         spo2Valid[temp] = 0;
                     }
                 }
-                printf("++%s", hr);
-                printf("++%s", spo2);
                 //发送消息
                 OSTaskQPost((OS_TCB*	)&OLEDTaskTCB,	//向任务Msgdis发送消息
                     (void*		)USART3_RX_BUF,
